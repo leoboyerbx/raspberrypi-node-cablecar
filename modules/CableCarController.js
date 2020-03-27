@@ -26,6 +26,10 @@ class CableCarController {
         this.controlPanel.onToggleButton('release', () => {
             this.toggleDirection()
         })
+
+        this.controlPanel.onPowerOff(() => {
+            console.error('poweroff')
+        })
         
         this.eventStack.call('init')
     }

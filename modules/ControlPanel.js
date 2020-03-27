@@ -35,6 +35,7 @@ class ControlPanel {
                 this.leds.power.off()
                 this.leds.power.blink(100)
                 setTimeout(() => {
+                    this.power.powerButtonPressed = false
                     this.leds.power.off()
                     this.eventStack.call('poweroff')
                 }, 2000)
@@ -47,9 +48,11 @@ class ControlPanel {
             this.leds.power.blink(500)
         })
         this.buttons.power.on('release', () => {
-            this.power.powerButtonPressed = false
-            clearTimeout(this.power.timeout)
-            this.leds.power.off()
+            if (this.power.powerButtonPressed) {
+                this.power.powerButtonPressed = false
+                clearTimeout(this.power.timeout)
+                this.leds.power.off()
+            }
         })
     }
 
