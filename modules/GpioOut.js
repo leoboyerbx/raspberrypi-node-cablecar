@@ -1,5 +1,5 @@
-import { Gpio } from 'onoff' //include onoff to interact with the GPIO
-
+import onoff from 'onoff'
+const Gpio = onoff.Gpio
 
 class GpioOut {
     static instances = []

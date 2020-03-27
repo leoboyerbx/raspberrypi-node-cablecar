@@ -1,4 +1,5 @@
-import { Gpio } from 'onoff'
+import onoff from 'onoff'
+const Gpio = onoff.Gpio
 
 class Led {
     static instances = []
