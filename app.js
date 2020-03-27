@@ -71,5 +71,4 @@ http.listen(port, function(){
 
 process.on('SIGINT', () => {
   motor.unExport()
-  Led.unExportAll()
 }); 
