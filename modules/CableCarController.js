@@ -11,7 +11,7 @@ class CableCarController {
         this.eventStack = new EventStack(this)
     }
 
-    init () {
+    init (callback = null) {
         this.motor.off()
         this.motor.setDirection(0)
         this.controlPanel.setDirectionStatus(0) 
@@ -30,7 +30,8 @@ class CableCarController {
         this.controlPanel.onPowerOff(() => {
             console.error('poweroff')
         })
-        
+
+        if (callback) callback()
         this.eventStack.call('init')
     }
 
