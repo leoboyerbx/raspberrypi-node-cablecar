@@ -1,5 +1,6 @@
 import Led from './Led'
 import Button from './Button'
+import EventStack from './EventStack'
 
 class ControlPanel {
     constructor(pins) {
@@ -17,11 +18,42 @@ class ControlPanel {
             start: new Button (pins.startButton, true),
             stop: new Button (pins.stopButton, true),
             toggleDirection: new Button (pins.toggleDirectionButton, true),
-            button: new Button(pins.powerButton)
+            power: new Button(pins.powerButton)
         }
+
+        this.eventStack = new EventStack(this)
+
+        this.initPowerButton()
+
     }
 
-    setStatus(status) {
+    initPowerButton () {
+        this.power = {
+            powerButtonPressed: false,
+            timeout: null,
+            handleEndTimeout: () => {
+                this.leds.power.off()
+                this.leds.power.blink(100)
+                setTimeout(() => {
+                    this.leds.power.off()
+                    this.eventStack.call('poweroff')
+                }, 2000)
+
+            }
+        }
+        this.buttons.power.on('push', () => {
+            this.power.powerButtonPressed = true
+            this.power.timeout = setTimeout(this.power.handleEndTimeout, 5000)
+            this.leds.power.blink(500)
+        })
+        this.buttons.power.on('release', () => {
+            this.power.powerButtonPressed = false
+            clearTimeout(this.power.timeout)
+            this.leds.power.off()
+        })
+    }
+
+    setRunningStatus (status) {
         switch (status) {
             case 'ready':
                 this.leds.ready.on()
@@ -43,6 +75,29 @@ class ControlPanel {
         }
     }
 
+    setDirectionStatus (direction) {
+        switch (direction) {
+            case 0:
+                this.leds.directionUp.on()
+                this.leds.directionDown.off()
+                break;
+            case 1:
+                this.leds.directionUp.off()
+                this.leds.directionDown.on()
+                break;
+            default:
+                break;
+        }
+    }
+
+    setEndRun (val) {
+        if (val) {
+            this.leds.endRun.on()
+        } else {
+            this.leds.endRun.off()
+        }
+    }
+
     onStartButton (trigger, callback) {
         this.buttons.start.on(trigger, callback)
     }
@@ -53,6 +108,10 @@ class ControlPanel {
 
     onToggleButton (trigger, callback) {
         this.buttons.toggleDirection.on(trigger, callback)
+    }
+
+    onPowerOff (callback) {
+        this.eventStack.register('poweroff')
     }
 
 }

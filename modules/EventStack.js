@@ -15,7 +15,7 @@ class EventStack {
     call(trigger) {
         if (this.stack[trigger]) {
             this.stack[trigger].map(action => {
-                action.apply(this.thisContext)
+                action.apply(this.thisContext, [{ target: this.thisContext }])
             })
         }
     }
