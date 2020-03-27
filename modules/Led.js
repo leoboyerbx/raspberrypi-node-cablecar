@@ -11,6 +11,7 @@ class Led {
         this.off()
         Led.instances.push(this)
 
+        this.isBlinking = false
         this.on = this.on.bind(this)
         this.off = this.off.bind(this)
         this.blink = this.blink.bind(this)
@@ -40,10 +41,14 @@ class Led {
     }
 
     blink (interval) {
-        this.blinkInterval = setInterval(this.toggleForBlink, interval)
+        if ((!this.isBlinking)) {
+            this.isBlinking = true
+            this.blinkInterval = setInterval(this.toggleForBlink, interval)
+        }
     }
     stopBlink () {
         if (this.blinkInterval) {
+            this.isBlinking = false
             clearInterval(this.blinkInterval)
             this.blinkInterval = null
         }
