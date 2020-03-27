@@ -1,4 +1,4 @@
-const GpioOut = require('./gpioOut')
+import GpioOut from './GpioOut'
 
 class BidirectionnalMotor {
     constructor (pin1, pin2) {
@@ -33,4 +33,4 @@ class BidirectionnalMotor {
     }
 }
 
-module.exports = BidirectionnalMotor
+export default BidirectionnalMotor

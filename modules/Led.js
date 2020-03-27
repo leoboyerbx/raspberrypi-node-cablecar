@@ -1,5 +1,4 @@
-const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
-
+import { Gpio } from 'onoff'
 
 class Led {
     static instances = []
@@ -71,4 +70,4 @@ class Led {
     }
 }
 
-module.exports = Led
+export default Led

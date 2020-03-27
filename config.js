@@ -1,4 +1,4 @@
-module.exports = {
+const config =  {
     pins: {
         readyLed: 22,
         runningLed: 27,
@@ -11,5 +11,10 @@ module.exports = {
         toggleDirectionButton: 0,
         powerButton: 19,
         powerLed: 13
+    },
+    motor: {
+        pins: [4, 3]
     }
 }
+
+export default config

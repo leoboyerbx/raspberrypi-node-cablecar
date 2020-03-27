@@ -1,10 +1,8 @@
-const Led = require("./led")
-const Button = require('./button')
-const config = require('../config')
+import Led from './Led'
+import Button from './Button'
 
 class ControlPanel {
-    constructor(config) {
-        const pins = config.pins
+    constructor(pins) {
         this.leds = {
             ready: new Led(pins.readyLed),
             running: new Led(pins.runningLed),
@@ -45,6 +43,18 @@ class ControlPanel {
         }
     }
 
+    onStartButton (trigger, callback) {
+        this.buttons.start.on(trigger, callback)
+    }
+
+    onStopButton (trigger, callback) {
+        this.buttons.stop.on(trigger, callback)
+    }
+
+    onToggleButton (trigger, callback) {
+        this.buttons.toggleDirection.on(trigger, callback)
+    }
+
 }
 
 
@@ -55,4 +65,4 @@ process.on('SIGINT', () => {
 }); 
 
 
-module.exports = new ControlPanel(config)
+export default ControlPanel

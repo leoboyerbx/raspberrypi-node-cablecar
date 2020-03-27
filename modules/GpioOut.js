@@ -1,4 +1,4 @@
-const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
+import { Gpio } from 'onoff' //include onoff to interact with the GPIO
 
 
 class GpioOut {
@@ -55,4 +55,4 @@ class GpioOut {
     }
 }
 
-module.exports = GpioOut
+export default GpioOut

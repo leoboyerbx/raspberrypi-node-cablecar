@@ -1,16 +1,17 @@
-const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
-
+import { Gpio } from 'onoff'
+import EventStack from './EventStack'
 
 class Button {
     static instances = []
-    eventActions = {}
-
+    
+    
     constructor (pin, invert = false) {
         this.gpio = new Gpio(pin, 'in', 'both')
         Button.instances.push(this)
-
+        
+        this.eventStack = new EventStack
+        
         this.invert = invert
-
         this.highValue = this.invert ? 0 : 1
         this.lowValue = 1 - this.highValue
 
@@ -20,27 +21,16 @@ class Button {
               return;
               }
             if (value === this.highValue) {
-                this.callEventStack('push')
+                this.eventStack.call('push')
             }
             if (value === this.lowValue) {
-                this.callEventStack('release')
+                this.eventStack.call('release')
             }
         })
     }
 
-    on(event, callback) {
-        if (!this.eventActions[event]) {
-            this.eventActions[event] = []
-        }
-        this.eventActions[event].push(callback)
-    }
-
-    callEventStack(event) {
-        if (this.eventActions[event]) {
-            this.eventActions[event].map(action => {
-                action()
-            })
-        }
+    on(trigger, callback) {
+        this.eventStack.register(trigger, callback)
     }
 
     static unExportAll () {
@@ -54,4 +44,4 @@ class Button {
     }
 }
 
-module.exports = Button
+export default Button
