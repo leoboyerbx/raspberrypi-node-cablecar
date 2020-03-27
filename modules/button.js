@@ -5,19 +5,24 @@ class Button {
     static instances = []
     eventActions = {}
 
-    constructor (pin) {
+    constructor (pin, invert = false) {
         this.gpio = new Gpio(pin, 'in', 'both')
         Button.instances.push(this)
+
+        this.invert = invert
+
+        this.highValue = this.invert ? 0 : 1
+        this.lowValue = 1 - this.highValue
 
         this.gpio.watch((err, value) => {
             if (err) { //if an error
                 console.error('There was an error', err); //output error message to console
               return;
               }
-            if (value === 1) {
+            if (value === this.highValue) {
                 this.callEventStack('push')
             }
-            if (value === 0) {
+            if (value === this.lowValue) {
                 this.callEventStack('release')
             }
         })
@@ -39,7 +44,7 @@ class Button {
     }
 
     static unExportAll () {
-        Led.instances.map(instance => {
+        Button.instances.map(instance => {
             instance.unExport()
         })
     }
