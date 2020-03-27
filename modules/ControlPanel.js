@@ -123,7 +123,7 @@ class ControlPanel {
 
 
         
-process.on('SIGINT', () => {
+process.on('exit', () => {
     Button.unExportAll()
     Led.unExportAll()
 }); 

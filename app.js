@@ -28,8 +28,12 @@ http.listen(port, function(){
   cableCarController.init(() => {console.log('controller ready')})
 
 });
-
+cableCarController.on('poweroff', process.exit)
 
 process.on('SIGINT', () => {
+  process.exit()
+})
+
+process.on('exit', () => {
   cableCarController.motor.unExport()
 }); 

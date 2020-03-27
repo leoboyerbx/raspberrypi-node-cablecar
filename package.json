@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "lodash": "^4.17.15",
     "onoff": "^5.0.1",
     "socket.io": "^2.3.0"
   },

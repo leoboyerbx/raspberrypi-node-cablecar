@@ -6,8 +6,8 @@ class Button {
     static instances = []
     
     
-    constructor (pin, invert = false) {
-        this.gpio = new Gpio(pin, 'in', 'both')
+    constructor (pin, invert = false, throttle = 0) {
+        this.gpio = new Gpio(pin, 'in', 'both', throttle ? {debounceTimeout: throttle} : null)
         Button.instances.push(this)
         
         this.eventStack = new EventStack

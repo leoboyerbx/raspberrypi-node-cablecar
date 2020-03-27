@@ -31,7 +31,7 @@ class CableCarController {
         })
 
         this.controlPanel.onPowerOff(() => {
-            console.error('poweroff')
+            this.eventStack.call('poweroff')
         })
 
         if (callback) callback()
