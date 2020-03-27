@@ -1,26 +1,17 @@
-const express = require('express')
-const Led = require('./modules/Led')
-const Button = require('./modules/Button')
+import express from 'express'
+import controlPanel from './modules/ControlPanel'
+import httpLib from 'http'
+import socketIo from 'socket.io'
+
 const app = express();
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
-const BidirectionnalMotor = require('./modules/Motor')
-
-const controlPanel = require('./modules/ControlPanel')
-
-const motor = new BidirectionnalMotor(4, 3)
-motor.off()
+const http = httpLib.createServer(app);
+const io = socketIo(http);
 
 
 const port = 3001;
 // app.use('/assets', express.static(__dirname + '/assets'))
 
 // app.use('/', express.static(__dirname + '/client/build'));
-
-controlPanel.setStatus('ready')
-setTimeout(() => { controlPanel.setStatus('running') }, 5000)
-setTimeout(() => { controlPanel.setStatus('error') }, 8000)
-
 
 io.on('connection', function(socket){
     socket.emit('switch', motor.currentState)
