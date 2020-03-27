@@ -15,10 +15,10 @@ class ControlPanel {
         }
 
         this.buttons = {
-            start: new Button (pins.startButton, true),
-            stop: new Button (pins.stopButton, true),
-            toggleDirection: new Button (pins.toggleDirectionButton, true),
-            power: new Button(pins.powerButton)
+            start: new Button (...pins.startButton),
+            stop: new Button (...pins.stopButton, true),
+            toggleDirection: new Button (...pins.toggleDirectionButton, true),
+            power: new Button(...pins.powerButton)
         }
 
         this.eventStack = new EventStack(this)
@@ -43,9 +43,11 @@ class ControlPanel {
             }
         }
         this.buttons.power.on('push', () => {
-            this.power.powerButtonPressed = true
-            this.power.timeout = setTimeout(this.power.handleEndTimeout, 5000)
-            this.leds.power.blink(500)
+            if (!this.power.powerButtonPressed) {
+                this.power.powerButtonPressed = true
+                this.power.timeout = setTimeout(this.power.handleEndTimeout, 5000)
+                this.leds.power.blink(500)
+            }
         })
         this.buttons.power.on('release', () => {
             if (this.power.powerButtonPressed) {

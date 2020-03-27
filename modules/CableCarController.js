@@ -16,7 +16,7 @@ class CableCarController {
         this.controlPanel.setDirectionStatus(0) 
         this.controlPanel.setRunningStatus('ready')
         
-        this.controlPanel.onStartButton('release', () => {
+        this.controlPanel.onStartButton('push', () => {
             console.log('startButton')
             this.start()
         })
@@ -24,7 +24,7 @@ class CableCarController {
             console.log('stopButton')
             this.stop()
         })
-        this.controlPanel.onToggleButton('push', () => {
+        this.controlPanel.onToggleButton('release', () => {
             console.log('toggle')
             
             this.toggleDirection()

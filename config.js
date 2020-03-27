@@ -6,10 +6,10 @@ const config =  {
         upLed: 10,
         downLed: 9,
         endRunLed: 11,
-        startButton: 6,
-        stopButton: 5,
-        toggleDirectionButton: 0,
-        powerButton: 19,
+        startButton: [6, true],
+        stopButton: [5, true],
+        toggleDirectionButton: [0, true],
+        powerButton: [19, false],
         powerLed: 13
     },
     motor: {
