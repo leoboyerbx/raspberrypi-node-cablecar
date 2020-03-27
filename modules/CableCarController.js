@@ -1,5 +1,5 @@
 import ControlPanel from './ControlPanel'
-import BidirectionnalMotor from './Motor'
+import BidirectionnalMotor from './BidirectionnamMotor'
 import EventStack from './EventStack'
 
 class CableCarController {
@@ -9,6 +9,15 @@ class CableCarController {
         this.motor = new BidirectionnalMotor(...config.motor.pins)
 
         this.eventStack = new EventStack(this)
+    }
+
+    init () {
+        this.motor.off()
+        this.controlPanel.setStatus('ready')
+    }
+
+    on (trigger, callback) {
+        this.eventStack.register(trigger, callback)
     }
 
 }
