@@ -34,8 +34,8 @@ class ControlPanel {
             handleEndTimeout: () => {
                 this.leds.power.off()
                 this.leds.power.blink(100)
+                this.power.powerButtonPressed = false
                 setTimeout(() => {
-                    this.power.powerButtonPressed = false
                     this.leds.power.off()
                     this.eventStack.call('poweroff')
                 }, 2000)
@@ -65,7 +65,7 @@ class ControlPanel {
                 break
             case 'running':
                 this.leds.ready.off()
-                this.leds.running.blink(300)
+                this.leds.running.blink(200)
                 this.leds.error.off()
                 break
             case 'error':
@@ -114,7 +114,7 @@ class ControlPanel {
     }
 
     onPowerOff (callback) {
-        this.eventStack.register('poweroff')
+        this.eventStack.register('poweroff', callback)
     }
 
 }
@@ -123,7 +123,7 @@ class ControlPanel {
         
 process.on('SIGINT', () => {
     Button.unExportAll()
-  Led.unExportAll()
+    Led.unExportAll()
 }); 
 
 

@@ -25,11 +25,11 @@ io.on('connection', function(socket){
 
 http.listen(port, function(){
   console.log('listening on port ' + port);
-  cableCarController.init()
+  cableCarController.init(() => {console.log('controller ready')})
 
 });
 
 
 process.on('SIGINT', () => {
-  motor.unExport()
+  cableCarController.motor.unExport()
 }); 

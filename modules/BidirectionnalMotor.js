@@ -5,6 +5,7 @@ class BidirectionnalMotor {
         this.relays = [ new GpioOut(pin1, true), new GpioOut(pin2, true) ]
         this.currentDirection = 0
         this.running = false
+        this.off()
     }
     on () {
         this.currentRelay.on()
@@ -31,6 +32,6 @@ class BidirectionnalMotor {
     unExport () {
         GpioOut.unExportAll()
     }
-}
+} 
 
 export default BidirectionnalMotor

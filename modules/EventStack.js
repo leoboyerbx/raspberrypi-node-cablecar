@@ -13,7 +13,7 @@ class EventStack {
     }
 
     call(trigger) {
-        if (this.stack[trigger]) {
+        if (this.stack[trigger] && this.stack[trigger].length > 0) {
             this.stack[trigger].map(action => {
                 action.apply(this.thisContext, [{ target: this.thisContext }])
             })

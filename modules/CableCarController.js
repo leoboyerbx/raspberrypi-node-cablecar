@@ -11,20 +11,25 @@ class CableCarController {
         this.eventStack = new EventStack(this)
     }
 
-    init (callback = null) {
-        this.motor.off()
+    init (callback = (() => null)) {
+        // this.motor.off()
         this.motor.setDirection(0)
         this.controlPanel.setDirectionStatus(0) 
         this.controlPanel.setRunningStatus('ready')
+        setTimeout(() => { this.controlPanel.setRunningStatus('running')}, 4000)
         
         this.controlPanel.onStartButton('release', () => {
-            this.start()
+            console.log('start')
+            // this.start()
         })
         this.controlPanel.onStopButton('push', () => {
-            this.stop()
+            console.log('stop')
+            // this.stop()
         })
         this.controlPanel.onToggleButton('release', () => {
-            this.toggleDirection()
+            console.log('toggle')
+            
+            // this.toggleDirection()
         })
 
         this.controlPanel.onPowerOff(() => {
