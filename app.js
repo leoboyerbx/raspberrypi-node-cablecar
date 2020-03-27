@@ -1,7 +1,10 @@
 import express from 'express'
-import controlPanel from './modules/ControlPanel'
 import httpLib from 'http'
 import socketIo from 'socket.io'
+import CableCarController from './modules/CableCarController';
+import config from './config';
+
+const cableCarController = new CableCarController(config)
 
 const app = express();
 const http = httpLib.createServer(app);
@@ -22,6 +25,8 @@ io.on('connection', function(socket){
 
 http.listen(port, function(){
   console.log('listening on port ' + port);
+  cableCarController.init()
+
 });
 
 
