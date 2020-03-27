@@ -32,7 +32,7 @@ class ControlPanel {
                 break
             case 'running':
                 this.leds.ready.off()
-                this.leds.running.blink(500)
+                this.leds.running.blink(300)
                 this.leds.error.off()
                 break
             case 'error':
@@ -55,4 +55,4 @@ process.on('SIGINT', () => {
 }); 
 
 
-export default new ControlPanel(config)
+module.exports = new ControlPanel(config)
