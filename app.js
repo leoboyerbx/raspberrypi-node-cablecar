@@ -2,7 +2,8 @@ import express from 'express'
 import httpLib from 'http'
 import socketIo from 'socket.io'
 import CableCarController from './modules/CableCarController';
-import config from './config';
+import config from './config'
+import childProcess from 'child_process'
 
 const cableCarController = new CableCarController(config)
 
@@ -28,7 +29,9 @@ http.listen(port, function(){
   cableCarController.init(() => {console.log('controller ready')})
 
 });
-cableCarController.on('poweroff', process.exit)
+cableCarController.on('poweroff', () => {
+  childProcess.exec("sudo poweroff")
+})
 
 process.on('SIGINT', () => {
   process.exit()
