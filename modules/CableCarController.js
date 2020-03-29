@@ -9,7 +9,7 @@ class CableCarController {
         this.controlPanel = new ControlPanel(config.pins)
         this.motor = new BidirectionnalMotor(...config.motor.pins)
         this.endRunButton = new Button(...config.pins.endRunButton)
-
+        this.config = config
         this.justSwitchedDirection = false
         this.isEndRun = false
 
@@ -30,6 +30,7 @@ class CableCarController {
         })
         this.controlPanel.onStopButton('push', () => {
             console.log('stopButton')
+            this.disableAutomatic()
             this.stop()
         })
         this.controlPanel.onToggleButton('release', () => {
@@ -45,6 +46,7 @@ class CableCarController {
 
         this.controlPanel.onEnableAutomatic(() => {
             console.log('enable automatic')
+            this.enableAutomatic()
         })
 
         this.controlPanel.onPowerOff(() => {
@@ -71,12 +73,30 @@ class CableCarController {
         this.eventStack.call('stop')
     }
 
+    enableAutomatic () {
+        this.automatic = true
+        this.controlPanel.setAutomaticMode(true)
+    }
+
+    disableAutomatic () {
+        this.automatic = false
+        this.controlPanel.setAutomaticMode(false)
+    }
+
+    autoReverse () {
+        this.toggleDirection()
+        this.start()
+    }
+
     endRun () {
         if (this.isRunning && !this.justSwitchedDirection) {
             this.isEndRun = true
             this.stop()
             this.eventStack.call('endRun')
             this.controlPanel.setEndRun(true)
+            if (this.automatic) {
+                setTimeout(() => { this.autoReverse() }, this.config.automaticModeDelay * 1000)
+            }
         }
     }
 

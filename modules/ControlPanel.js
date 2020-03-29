@@ -96,12 +96,20 @@ class ControlPanel {
     setRunningStatus (status) {
         switch (status) {
             case 'ready':
-                this.leds.ready.blink(500)
+                if (this.automatic) {
+                    this.leds.ready.blink(500)
+                } else {
+                    this.leds.ready.on()
+                }
                 this.leds.running.off()
                 this.leds.error.off()
                 break
             case 'running':
-                this.leds.ready.blink(200)
+                    if (this.automatic) {
+                        this.leds.ready.blink(200)
+                    } else {
+                        this.leds.ready.off()
+                    }
                 this.leds.running.blink(200)
                 this.leds.error.off()
                 break
