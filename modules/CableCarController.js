@@ -81,6 +81,10 @@ class CableCarController {
     disableAutomatic () {
         this.automatic = false
         this.controlPanel.setAutomaticMode(false)
+        if (this.automaticTimeout) {
+            clearTimeout(this.automaticTimeout)
+            this.automaticTimeout = null
+        }
     }
 
     autoReverse () {
@@ -95,7 +99,7 @@ class CableCarController {
             this.eventStack.call('endRun')
             this.controlPanel.setEndRun(true)
             if (this.automatic) {
-                setTimeout(() => { this.autoReverse() }, this.config.automaticModeDelay * 1000)
+                this.automaticTimeout = setTimeout(() => { this.autoReverse() }, this.config.automaticModeDelay * 1000)
             }
         }
     }
