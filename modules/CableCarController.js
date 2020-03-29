@@ -13,6 +13,8 @@ class CableCarController {
         this.justSwitchedDirection = false
         this.isEndRun = false
 
+        this.automatic = false
+
         this.eventStack = new EventStack(this)
     }
 
@@ -39,6 +41,10 @@ class CableCarController {
         this.endRunButton.on('push', () => {
             console.log('endRun')
             this.endRun()
+        })
+
+        this.controlPanel.onEnableAutomatic(() => {
+            console.log('enable automatic')
         })
 
         this.controlPanel.onPowerOff(() => {

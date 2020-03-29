@@ -15,7 +15,8 @@ const config =  {
     },
     motor: {
         pins: [4, 3]
-    }
+    },
+    automaticModeDelay: 5
 }
 
 export default config

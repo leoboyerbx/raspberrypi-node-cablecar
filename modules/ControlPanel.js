@@ -23,8 +23,17 @@ class ControlPanel {
 
         this.eventStack = new EventStack(this)
 
-        this.initPowerButton()
+        this.automatic = false
+        this.runningStatus = ""
 
+        this.initPowerButton()
+        this.initStartButton()
+
+    }
+
+    setAutomaticMode (set) {
+        this.automatic = set
+        this.refreshRunningStatus()
     }
 
     initPowerButton () {
@@ -58,15 +67,41 @@ class ControlPanel {
         })
     }
 
+    initStartButton () {
+        this.startButton = {
+            startButtonPressed: false,
+            timeout: null,
+            handleEndTimeout: () => {
+                this.eventStack.call('enableAutomatic')
+            }
+        }
+        this.buttons.start.on('push', () => {
+            if (!this.startButton.startButtonPressed) {
+                this.startButton.startButtonPressed = true
+                this.startButton.timeout = setTimeout(this.startButton.handleEndTimeout, 2000)
+            }
+        })
+        this.buttons.start.on('release', () => {
+            if (this.startButton.startButtonPressed) {
+                this.startButton.startButtonPressed = false
+                clearTimeout(this.startButton.timeout)
+            }
+        })
+    }
+
+    refreshRunningStatus () {
+        this.setRunningStatus(this.runningStatus)
+    }
+
     setRunningStatus (status) {
         switch (status) {
             case 'ready':
-                this.leds.ready.on()
+                this.leds.ready.blink(500)
                 this.leds.running.off()
                 this.leds.error.off()
                 break
             case 'running':
-                this.leds.ready.off()
+                this.leds.ready.blink(200)
                 this.leds.running.blink(200)
                 this.leds.error.off()
                 break
@@ -78,6 +113,7 @@ class ControlPanel {
             default:
                 break
         }
+        this.runningStatus = status
     }
 
     setDirectionStatus (direction) {
@@ -107,18 +143,22 @@ class ControlPanel {
         this.buttons.start.on(trigger, callback)
     }
 
+    
     onStopButton (trigger, callback) {
         this.buttons.stop.on(trigger, callback)
     }
-
+    
     onToggleButton (trigger, callback) {
         this.buttons.toggleDirection.on(trigger, callback)
     }
-
+    
     onPowerOff (callback) {
         this.eventStack.register('poweroff', callback)
     }
-
+    
+    onEnableAutomatic (callback) {
+        this.eventStack.register('enableAutomatic', callback)
+    }
 }
 
 
