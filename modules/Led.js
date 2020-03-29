@@ -41,7 +41,8 @@ class Led {
     }
 
     blink (interval) {
-        if ((!this.isBlinking)) {
+        if (!this.isBlinking || interval !== this.blinkInterval) {
+            this.off()
             this.isBlinking = true
             this.blinkInterval = setInterval(this.toggleForBlink, interval)
         }
