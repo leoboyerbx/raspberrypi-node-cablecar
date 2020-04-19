@@ -11,18 +11,57 @@ const app = express();
 const http = httpLib.createServer(app);
 const io = socketIo(http);
 
-
 const port = 3000;
 // app.use('/assets', express.static(__dirname + '/assets'))
 
 app.use('/', express.static(__dirname + '/../client/'));
 
 io.on('connection', function(socket){
-    socket.emit('switch', motor.currentState)
-    socket.on('switch', value => {
-        switchMotorState(value)
+    console.log('a client connected')
+    // Ini current state
+    socket.emit(cableCarController.isRunning ? 'start' : 'stop')
+    socket.emit(cableCarController.isRunning ? 'start' : 'stop')
+    socket.emit('set direction', cableCarController.currentDirection)
+
+    // CLient sent event
+    socket.on('start', () => {
+      cableCarController.start()
     })
-  });
+
+    socket.on('switch direction', () => {
+      cableCarController.toggleDirection()
+    })
+
+    socket.on('set automatic', set => {
+      if (cableCarController.isRunning) {
+        if (set) {
+          cableCarController.enableAutomatic()
+        } else {
+          cableCarController.disableAutomatic()
+        }
+      }
+    })
+
+    socket.on('stop', () => {
+      cableCarController.stop()
+    })
+});
+
+cableCarController.on('start', () => {
+  io.emit('start')
+})
+cableCarController.on('stop', () => {
+  io.emit('stop')
+})
+cableCarController.on('setDirection', direction => {
+  io.emit('set direction', direction)
+})
+cableCarController.on('enableAutomatic', () => {
+  io.emit('enable automatic')
+})
+cableCarController.on('disableAutomatic', () => {
+  io.emit('disable automatic')
+})
 
 http.listen(port, function(){
   console.log('listening on port ' + port);

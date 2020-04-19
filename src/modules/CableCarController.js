@@ -33,7 +33,7 @@ class CableCarController {
             this.disableAutomatic()
             this.stop()
         })
-        this.controlPanel.onToggleButton('release', () => {
+        this.controlPanel.onToggleButton('push', () => {
             console.log('toggle')
             
             this.toggleDirection()
@@ -76,11 +76,13 @@ class CableCarController {
     enableAutomatic () {
         this.automatic = true
         this.controlPanel.setAutomaticMode(true)
+        this.eventStack.call('enableAutomatic')
     }
-
+    
     disableAutomatic () {
         this.automatic = false
         this.controlPanel.setAutomaticMode(false)
+        this.eventStack.call('disableAutomatic')
         if (this.automaticTimeout) {
             clearTimeout(this.automaticTimeout)
             this.automaticTimeout = null
@@ -112,7 +114,7 @@ class CableCarController {
             }
             this.motor.setDirection(direction)
             this.controlPanel.setDirectionStatus(direction)
-            this.eventStack.call('setDirection')
+            this.eventStack.call('setDirection', [direction])
             return true
         } else {
             return false
@@ -126,6 +128,10 @@ class CableCarController {
 
     get isRunning () {
         return this.motor.running
+    }
+
+    get currentDirection () {
+        return this.motor.currentDirection
     }
 
     on (trigger, callback) {

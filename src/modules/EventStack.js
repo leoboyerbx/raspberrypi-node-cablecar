@@ -12,10 +12,10 @@ class EventStack {
         this.stack[trigger].push(callback)
     }
 
-    call(trigger) {
+    call(trigger, args = []) {
         if (this.stack[trigger] && this.stack[trigger].length > 0) {
             this.stack[trigger].map(action => {
-                action.apply(this.thisContext, [{ target: this.thisContext }])
+                action.apply(this.thisContext, args)
             })
         }
     }
