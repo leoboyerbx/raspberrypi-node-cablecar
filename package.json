@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node --experimental-modules --es-module-specifier-resolution=node app.js"
+    "start": "node --experimental-modules --es-module-specifier-resolution=node app.js",
+    "dev": "nodemon --exec babel-node app.js"
   },
   "author": "",
   "license": "ISC",
@@ -14,5 +15,13 @@
     "onoff": "^5.0.1",
     "socket.io": "^2.3.0"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.9.5",
+    "nodemon": "^2.0.3"
+  }
 }
