@@ -15,7 +15,7 @@ const io = socketIo(http);
 const port = 3000;
 // app.use('/assets', express.static(__dirname + '/assets'))
 
-app.use('/', express.static(__dirname + '/client/'));
+app.use('/', express.static(__dirname + '/../client/'));
 
 io.on('connection', function(socket){
     socket.emit('switch', motor.currentState)
