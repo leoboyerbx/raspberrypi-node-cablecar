@@ -14,6 +14,7 @@ class CableCarController {
         this.isEndRun = false
 
         this.automatic = false
+    	this.middleTimeout = null
 
         this.eventStack = new EventStack(this)
     }
@@ -70,6 +71,10 @@ class CableCarController {
     stop () {
         this.motor.off()
         this.controlPanel.setRunningStatus('ready')
+        if (this.middleTimeout) {
+            clearTimeout(this.middleTimeout)
+            this.middleTimeout = null
+        }
         this.eventStack.call('stop')
     }
 
@@ -87,6 +92,17 @@ class CableCarController {
             clearTimeout(this.automaticTimeout)
             this.automaticTimeout = null
         }
+    }
+
+    goToMiddle () {
+        if (this.isEndRun) {
+            this.autoReverse()
+        } else {
+            this.start()
+        }
+    	this.middleTimeout = setTimeout(() => {
+            this.stop()
+        }, ((this.config.runDuration / 2) * 1000) - (this.config.middleOffset * 1000))
     }
 
     autoReverse () {

@@ -28,6 +28,10 @@ io.on('connection', function(socket){
       cableCarController.start()
     })
 
+    socket.on('go to middle', () => {
+      cableCarController.goToMiddle()
+    })
+    
     socket.on('switch direction', () => {
       cableCarController.toggleDirection()
     })

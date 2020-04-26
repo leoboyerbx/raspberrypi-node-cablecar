@@ -38,11 +38,11 @@ var EventStack = /*#__PURE__*/function () {
     value: function call(trigger) {
       var _this = this;
 
+      var args = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
       if (this.stack[trigger] && this.stack[trigger].length > 0) {
         this.stack[trigger].map(function (action) {
-          action.apply(_this.thisContext, [{
-            target: _this.thisContext
-          }]);
+          action.apply(_this.thisContext, args);
         });
       }
     }

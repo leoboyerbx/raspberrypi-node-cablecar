@@ -24,10 +24,48 @@ var port = 3000; // app.use('/assets', express.static(__dirname + '/assets'))
 
 app.use('/', _express["default"]["static"](__dirname + '/../client/'));
 io.on('connection', function (socket) {
-  socket.emit('switch', motor.currentState);
-  socket.on('switch', function (value) {
-    switchMotorState(value);
+  console.log('a client connected'); // Ini current state
+
+  socket.emit(cableCarController.isRunning ? 'start' : 'stop');
+  socket.emit(cableCarController.isRunning ? 'start' : 'stop');
+  socket.emit('set direction', cableCarController.currentDirection); // CLient sent event
+
+  socket.on('start', function () {
+    cableCarController.start();
   });
+  socket.on('go to middle', function () {
+    cableCarController.goToMiddle();
+  });
+  socket.on('switch direction', function () {
+    cableCarController.toggleDirection();
+  });
+  socket.on('set automatic', function (set) {
+    if (cableCarController.isRunning) {
+      if (set) {
+        cableCarController.enableAutomatic();
+      } else {
+        cableCarController.disableAutomatic();
+      }
+    }
+  });
+  socket.on('stop', function () {
+    cableCarController.stop();
+  });
+});
+cableCarController.on('start', function () {
+  io.emit('start');
+});
+cableCarController.on('stop', function () {
+  io.emit('stop');
+});
+cableCarController.on('setDirection', function (direction) {
+  io.emit('set direction', direction);
+});
+cableCarController.on('enableAutomatic', function () {
+  io.emit('enable automatic');
+});
+cableCarController.on('disableAutomatic', function () {
+  io.emit('disable automatic');
 });
 http.listen(port, function () {
   console.log('listening on port ' + port);

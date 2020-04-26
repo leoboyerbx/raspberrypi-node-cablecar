@@ -22,7 +22,9 @@ var config = {
   motor: {
     pins: [4, 3]
   },
-  automaticModeDelay: 5
+  automaticModeDelay: 5,
+  runDuration: 50,
+  middleOffset: 1
 };
 var _default = config;
 exports["default"] = _default;

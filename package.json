@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon --exec babel-node src/app.js",
     "build": "babel src --out-dir dist",
-    "start": "node dist/app.js"
+    "start": "node dist/app.js",
+    "deploy": "npm run build && pm2 restart cablecar"
   },
   "author": "",
   "license": "ISC",

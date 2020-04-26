@@ -168,6 +168,11 @@ $(document).ready(() => {
         socket.emit('switch direction')
     })
 
+    $('#middle').click(() => {
+        console.log('hello')
+        socket.emit('go to middle')
+    })
+
     socket.on('stop', () => { displayController.stop() })
     socket.on('start', () => { displayController.start() })
     socket.on('set direction', direction => { displayController.setDirection(direction) })

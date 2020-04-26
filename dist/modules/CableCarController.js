@@ -50,6 +50,7 @@ var CableCarController = /*#__PURE__*/function () {
     this.justSwitchedDirection = false;
     this.isEndRun = false;
     this.automatic = false;
+    this.middleTimeout = null;
     this.eventStack = new _EventStack["default"](this);
   }
 
@@ -76,7 +77,7 @@ var CableCarController = /*#__PURE__*/function () {
 
         _this.stop();
       });
-      this.controlPanel.onToggleButton('release', function () {
+      this.controlPanel.onToggleButton('push', function () {
         console.log('toggle');
 
         _this.toggleDirection();
@@ -117,6 +118,12 @@ var CableCarController = /*#__PURE__*/function () {
     value: function stop() {
       this.motor.off();
       this.controlPanel.setRunningStatus('ready');
+
+      if (this.middleTimeout) {
+        clearTimeout(this.middleTimeout);
+        this.middleTimeout = null;
+      }
+
       this.eventStack.call('stop');
     }
   }, {
@@ -124,17 +131,34 @@ var CableCarController = /*#__PURE__*/function () {
     value: function enableAutomatic() {
       this.automatic = true;
       this.controlPanel.setAutomaticMode(true);
+      this.eventStack.call('enableAutomatic');
     }
   }, {
     key: "disableAutomatic",
     value: function disableAutomatic() {
       this.automatic = false;
       this.controlPanel.setAutomaticMode(false);
+      this.eventStack.call('disableAutomatic');
 
       if (this.automaticTimeout) {
         clearTimeout(this.automaticTimeout);
         this.automaticTimeout = null;
       }
+    }
+  }, {
+    key: "goToMiddle",
+    value: function goToMiddle() {
+      var _this3 = this;
+
+      if (this.isEndRun) {
+        this.autoReverse();
+      } else {
+        this.start();
+      }
+
+      this.middleTimeout = setTimeout(function () {
+        _this3.stop();
+      }, this.config.runDuration / 2 * 1000 - this.config.middleOffset * 1000);
     }
   }, {
     key: "autoReverse",
@@ -145,7 +169,7 @@ var CableCarController = /*#__PURE__*/function () {
   }, {
     key: "endRun",
     value: function endRun() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this.isRunning && !this.justSwitchedDirection) {
         this.isEndRun = true;
@@ -155,7 +179,7 @@ var CableCarController = /*#__PURE__*/function () {
 
         if (this.automatic) {
           this.automaticTimeout = setTimeout(function () {
-            _this3.autoReverse();
+            _this4.autoReverse();
           }, this.config.automaticModeDelay * 1000);
         }
       }
@@ -171,7 +195,7 @@ var CableCarController = /*#__PURE__*/function () {
 
         this.motor.setDirection(direction);
         this.controlPanel.setDirectionStatus(direction);
-        this.eventStack.call('setDirection');
+        this.eventStack.call('setDirection', [direction]);
         return true;
       } else {
         return false;
@@ -192,6 +216,11 @@ var CableCarController = /*#__PURE__*/function () {
     key: "isRunning",
     get: function get() {
       return this.motor.running;
+    }
+  }, {
+    key: "currentDirection",
+    get: function get() {
+      return this.motor.currentDirection;
     }
   }]);
 
