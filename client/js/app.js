@@ -182,4 +182,25 @@ $(document).ready(() => {
     socket.on('set direction', direction => { displayController.setDirection(direction) })
     socket.on('enable automatic', () => { displayController.setAutomatic(true) })
     socket.on('disable automatic', () => { displayController.setAutomatic(false) })
+
+    const whiteLed = new StateButton($('#white-led'), {
+        off: {
+            color: "secondary",
+            icon: "toggle-off",
+            text: "Blanc"
+        },
+        on: {
+            color: "secondary active",
+            icon: "toggle-on",
+            text: "Blanc"
+        }
+    })
+    whiteLed.click(() => {
+        socket.emit('light', {
+            cabin: 1,
+            color: 'white',
+            onoff: whiteLed.currentState === 'on' ? 'off' : 'on'
+        })
+    })
+
 })
