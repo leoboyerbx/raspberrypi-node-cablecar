@@ -20,10 +20,10 @@ io.on('connection', socket => {
   console.log('any connected')
 })
 const cabin1 = io.of('/cabin1').on('connection', socket => {
-  console.log('a cabin connected')
+  console.log('Cabin 1 connected')
 })
 const cabin2 = io.of('/cabin2').on('connection', socket => {
-  console.log('a cabin connected')
+  console.log('Cabin 2 connected')
 })
 const cabins = [cabin1, cabin2]
 

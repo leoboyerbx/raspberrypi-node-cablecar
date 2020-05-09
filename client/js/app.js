@@ -191,7 +191,6 @@ $(document).ready(() => {
         { name: 'blue', class: 'primary', displayName: 'Bleu'},
     ]
     function cabinLight (cabin, color) {
-        console.log(cabin, color, '#cb'+ (cabin + 1) +'-' + color.name)
         const button = new StateButton($('#cb'+ (cabin + 1) +'-' + color.name), {
             off: {
                 color: color.class,
@@ -210,6 +209,11 @@ $(document).ready(() => {
             }
         })
         button.click(() => {
+            console.log({
+                cabin: cabin,
+                color: color.name,
+                onoff: button.currentState === 'on' ? 'off' : 'on'
+            })
             socket.emit('light', {
                 cabin: cabin,
                 color: color.name,
@@ -217,37 +221,6 @@ $(document).ready(() => {
             })
         })
     }
-    // colors.forEach(color => {
-    //     console.log($('#cb1-' + color.name))
-    //     for (let i = 0; i <= 1; i++) {
-    //         cabins[i][color.name] = new StateButton($('#cb1-' + color.name), {
-    //             off: {
-    //                 color: color.class,
-    //                 icon: "toggle-off",
-    //                 text: color.displayName
-    //             },
-    //             on: {
-    //                 color: color.class + " active",
-    //                 icon: "toggle-on",
-    //                 text: color.displayName
-    //             }
-    //         })
-    
-    //         cabins[i][color.name].click(() => {
-    //             console.log(cabins)
-    //             socket.emit('light', {
-    //                 cabin: 0,
-    //                 color: color.name,
-    //                 onoff: cabins[i][color.name].currentState === 'on' ? 'off' : 'on'
-    //             })
-    //         })
-    
-    //     }
-    // })
-    
-    // socket.on('light', action => {
-    //     cabins[action.cabin][action.color].setState(action.onoff)
-    // })
     
     colors.forEach(color => {
         for (let i = 0; i <= 1; i++) {

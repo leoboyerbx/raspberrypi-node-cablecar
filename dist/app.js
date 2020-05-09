@@ -27,10 +27,10 @@ io.on('connection', function (socket) {
   console.log('any connected');
 });
 var cabin1 = io.of('/cabin1').on('connection', function (socket) {
-  console.log('a cabin connected');
+  console.log('Cabin 1 connected');
 });
 var cabin2 = io.of('/cabin2').on('connection', function (socket) {
-  console.log('a cabin connected');
+  console.log('Cabin 2 connected');
 });
 var cabins = [cabin1, cabin2];
 var controlClients = io.of('/client').on('connection', function (socket) {

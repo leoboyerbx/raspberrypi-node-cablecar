@@ -19,7 +19,7 @@ var leds = {
 var cabinNumber = process.argv[2] || 1;
 console.log("My cabin number is " + cabinNumber);
 
-var socket = _socket["default"].connect('https://kble-car.cf/cabin1');
+var socket = _socket["default"].connect('https://kble-car.cf/cabin' + cabinNumber);
 
 socket.on('on', function (color) {
   leds[color].on();
