@@ -12,7 +12,7 @@ const leds = {
   green: new Led(cabinConf.green)
 }
 
-const cabinNumber = process.argv[1] || 1
+const cabinNumber = process.argv[2] || 1
 console.log("My cabin number is " + cabinNumber)
 
 const socket = io('http://kble-car.cf/cabin' + cabinNumber)

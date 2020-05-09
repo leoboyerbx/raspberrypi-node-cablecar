@@ -16,7 +16,7 @@ var leds = {
   yellow: new _Led["default"](cabinConf.yellow),
   green: new _Led["default"](cabinConf.green)
 };
-var cabinNumber = process.argv[1] || 1;
+var cabinNumber = process.argv[2] || 1;
 console.log("My cabin number is " + cabinNumber);
 var socket = (0, _socket["default"])('http://kble-car.cf/cabin' + cabinNumber);
 socket.on('on', function (color) {
