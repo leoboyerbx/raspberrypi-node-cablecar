@@ -13,9 +13,9 @@ const leds = {
 }
 
 const cabinNumber = process.argv[2] || 1
-console.log("My cabin number is " + cabinNumber)
+console.log("My cabin number is " + cabinNumber + ', url: http://kble-car.cf/cabin' + cabinNumber)
 
-const socket = io('http://kble-car.cf/cabin' + cabinNumber)
+const socket = io('http://192.168.1.34/cabin' + cabinNumber)
 
 socket.on('on', color => {
   leds[color].on()

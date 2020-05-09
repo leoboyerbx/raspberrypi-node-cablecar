@@ -16,6 +16,9 @@ const port = 3000;
 
 app.use('/', express.static(__dirname + '/../client/'));
 
+io.on('connection', socket => {
+  console.log('any connected')
+})
 const cabin1 = io.of('/cabin1').on('connection', socket => {
   console.log('a cabin connected')
 })
