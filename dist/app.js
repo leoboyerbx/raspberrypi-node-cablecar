@@ -23,6 +23,9 @@ var io = (0, _socket["default"])(http);
 var port = 3000; // app.use('/assets', express.static(__dirname + '/assets'))
 
 app.use('/', _express["default"]["static"](__dirname + '/../client/'));
+io.on('connection', function (socket) {
+  console.log('any connected');
+});
 var cabin1 = io.of('/cabin1').on('connection', function (socket) {
   console.log('a cabin connected');
 });
