@@ -150,7 +150,7 @@ window.displayController = {
 }
 
 $(document).ready(() => {
-    const socket = io()
+    const socket = io('/client')
     const displayController = window.displayController
 
     displayController.startStopButton.click(() => {
@@ -171,6 +171,10 @@ $(document).ready(() => {
     $('#middle').click(() => {
         console.log('hello')
         socket.emit('go to middle')
+    })
+
+    $('#shutdown-button').click(() => {
+        socket.emit('poweroff')
     })
 
     socket.on('stop', () => { displayController.stop() })

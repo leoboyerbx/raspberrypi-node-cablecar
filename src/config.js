@@ -18,7 +18,14 @@ const config =  {
     },
     automaticModeDelay: 5,
     runDuration: 50,
-    middleOffset: 1
+    middleOffset: 1,
+    cabin: {
+        white: 26,
+        yellow: 19,
+        green:13,
+        red: 6,
+        blue: 5
+    }
 }
 
 export default config

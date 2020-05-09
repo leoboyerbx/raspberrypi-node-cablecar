@@ -16,7 +16,8 @@ const port = 3000;
 
 app.use('/', express.static(__dirname + '/../client/'));
 
-io.on('connection', function(socket){
+
+const controlClients = io.of('/client').on('connection', function(socket) {
     console.log('a client connected')
     // Ini current state
     socket.emit(cableCarController.isRunning ? 'start' : 'stop')
@@ -49,22 +50,25 @@ io.on('connection', function(socket){
     socket.on('stop', () => {
       cableCarController.stop()
     })
+    socket.on('poweroff', () => {
+      childProcess.exec("sudo poweroff")
+    })
 });
 
 cableCarController.on('start', () => {
-  io.emit('start')
+  controlClients.emit('start')
 })
 cableCarController.on('stop', () => {
-  io.emit('stop')
+  controlClients.emit('stop')
 })
 cableCarController.on('setDirection', direction => {
-  io.emit('set direction', direction)
+  controlClients.emit('set direction', direction)
 })
 cableCarController.on('enableAutomatic', () => {
-  io.emit('enable automatic')
+  controlClients.emit('enable automatic')
 })
 cableCarController.on('disableAutomatic', () => {
-  io.emit('disable automatic')
+  controlClients.emit('disable automatic')
 })
 
 http.listen(port, function(){

@@ -23,7 +23,7 @@ var io = (0, _socket["default"])(http);
 var port = 3000; // app.use('/assets', express.static(__dirname + '/assets'))
 
 app.use('/', _express["default"]["static"](__dirname + '/../client/'));
-io.on('connection', function (socket) {
+var controlClient = io.of('/client').on('connection', function (socket) {
   console.log('a client connected'); // Ini current state
 
   socket.emit(cableCarController.isRunning ? 'start' : 'stop');
@@ -51,21 +51,24 @@ io.on('connection', function (socket) {
   socket.on('stop', function () {
     cableCarController.stop();
   });
+  socket.on('poweroff', function () {
+    _child_process["default"].exec("sudo poweroff");
+  });
 });
 cableCarController.on('start', function () {
-  io.emit('start');
+  controlClient.emit('start');
 });
 cableCarController.on('stop', function () {
-  io.emit('stop');
+  controlClient.emit('stop');
 });
 cableCarController.on('setDirection', function (direction) {
-  io.emit('set direction', direction);
+  controlClient.emit('set direction', direction);
 });
 cableCarController.on('enableAutomatic', function () {
-  io.emit('enable automatic');
+  controlClient.emit('enable automatic');
 });
 cableCarController.on('disableAutomatic', function () {
-  io.emit('disable automatic');
+  controlClient.emit('disable automatic');
 });
 http.listen(port, function () {
   console.log('listening on port ' + port);
