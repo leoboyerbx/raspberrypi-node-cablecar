@@ -65,7 +65,9 @@ var controlClients = io.of('/client').on('connection', function (socket) {
     _child_process["default"].exec("sudo poweroff");
   });
   socket.on('light', function (action) {
-    cabins[action.cabin - 1].emit(action.onoff, action.color);
+    console.log(action.onoff);
+    cabins[action.cabin].emit(action.onoff, action.color);
+    controlClients.emit('light', action);
   });
 });
 cableCarController.on('start', function () {

@@ -5,7 +5,7 @@ class StateButton {
         this.$element = $element
         this.$icon = this.$element.find('i.fas')
         this.$text = this.$element.find('span.text')
-
+        
         this.on = this.$element.on.bind(this.$element)
         this.click = this.$element.click.bind(this.$element)
     }
@@ -21,7 +21,7 @@ class StateButton {
         this.$element.addClass('btn-' + state.color)
         this.$icon.addClass('fa-' + state.icon)
         this.$text.text(state.text)
-
+        
     }
 }
 class StateIndicator {
@@ -32,10 +32,10 @@ class StateIndicator {
         this.$icon = this.$element.find('i.fas')
         this.$text = this.$element.find('.value-text')
         this.$title = this.$element.find('.title-text')
-
+        
         this.on = this.$element.on.bind(this.$element)
         this.click = this.$element.click.bind(this.$element)
-
+        
     }
     setState(state) {
         for (let [key, value] of Object.entries(this.states)) {
@@ -83,7 +83,7 @@ window.displayController = {
             text: "Passer en mode manuel"
         }
     }),
-
+    
     runningIndicator: new StateIndicator($('#runningStatusCard'), {
         stopped: {
             color: "primary",
@@ -96,7 +96,7 @@ window.displayController = {
             text: "En fonction"
         }
     }),
-
+    
     directionIndicator: new StateIndicator($('#directionIndicator'), {
         0: {
             color: "warning",
@@ -123,25 +123,25 @@ window.displayController = {
     }),
     toggleDirectionButton : $('#toggle-direction'),
     
-
+    
     start: function () {
         this.startStopButton.setState('started')
         this.runningIndicator.setState('started')
         this.toggleDirectionButton.prop('disabled', true);
         this.runningState = true
     },
-
+    
     stop: function () {
         this.startStopButton.setState('stopped')
         this.runningIndicator.setState('stopped')
         this.toggleDirectionButton.prop('disabled', false);
         this.runningState = false
     },
-
+    
     setDirection: function (direction) {
         this.directionIndicator.setState(direction)
     },
-
+    
     setAutomatic: function (set) {
         this.automaticModeButton.setState(set ? 'enabled' : 'disabled')
         this.automaticModeIndicator.setState(set ? 'enabled' : 'disabled')
@@ -152,7 +152,7 @@ window.displayController = {
 $(document).ready(() => {
     const socket = io('/client')
     const displayController = window.displayController
-
+    
     displayController.startStopButton.click(() => {
         if (displayController.runningState) {
             socket.emit('stop')
@@ -160,47 +160,99 @@ $(document).ready(() => {
             socket.emit('start')
         }
     })
-
+    
     displayController.automaticModeButton.click(() => {
         socket.emit('set automatic', !displayController.automaticState)
     })
     displayController.toggleDirectionButton.click(() => {
         socket.emit('switch direction')
     })
-
+    
     $('#middle').click(() => {
         console.log('hello')
         socket.emit('go to middle')
     })
-
+    
     $('#shutdown-button').click(() => {
         socket.emit('poweroff')
     })
-
+    
     socket.on('stop', () => { displayController.stop() })
     socket.on('start', () => { displayController.start() })
     socket.on('set direction', direction => { displayController.setDirection(direction) })
     socket.on('enable automatic', () => { displayController.setAutomatic(true) })
     socket.on('disable automatic', () => { displayController.setAutomatic(false) })
-
-    const whiteLed = new StateButton($('#white-led'), {
-        off: {
-            color: "secondary",
-            icon: "toggle-off",
-            text: "Blanc"
-        },
-        on: {
-            color: "secondary active",
-            icon: "toggle-on",
-            text: "Blanc"
+    
+    const colors = [
+        { name: 'white', class: 'secondary', displayName: 'Blanc' },
+        { name: 'red', class: 'danger', displayName: 'Rouge' },
+        { name: 'green', class: 'success', displayName: 'Vert' },
+        { name: 'yellow', class: 'warning', displayName: 'Jaune' },
+        { name: 'blue', class: 'primary', displayName: 'Bleu'},
+    ]
+    function cabinLight (cabin, color) {
+        console.log(cabin, color, '#cb'+ (cabin + 1) +'-' + color.name)
+        const button = new StateButton($('#cb'+ (cabin + 1) +'-' + color.name), {
+            off: {
+                color: color.class,
+                icon: "toggle-off",
+                text: color.displayName
+            },
+            on: {
+                color: color.class + " active",
+                icon: "toggle-on",
+                text: color.displayName
+            }
+        })
+        socket.on('light', action => {
+            if (action.cabin === cabin && action.color === color.name) {
+                button.setState(action.onoff)
+            }
+        })
+        button.click(() => {
+            socket.emit('light', {
+                cabin: cabin,
+                color: color.name,
+                onoff: button.currentState === 'on' ? 'off' : 'on'
+            })
+        })
+    }
+    // colors.forEach(color => {
+    //     console.log($('#cb1-' + color.name))
+    //     for (let i = 0; i <= 1; i++) {
+    //         cabins[i][color.name] = new StateButton($('#cb1-' + color.name), {
+    //             off: {
+    //                 color: color.class,
+    //                 icon: "toggle-off",
+    //                 text: color.displayName
+    //             },
+    //             on: {
+    //                 color: color.class + " active",
+    //                 icon: "toggle-on",
+    //                 text: color.displayName
+    //             }
+    //         })
+    
+    //         cabins[i][color.name].click(() => {
+    //             console.log(cabins)
+    //             socket.emit('light', {
+    //                 cabin: 0,
+    //                 color: color.name,
+    //                 onoff: cabins[i][color.name].currentState === 'on' ? 'off' : 'on'
+    //             })
+    //         })
+    
+    //     }
+    // })
+    
+    // socket.on('light', action => {
+    //     cabins[action.cabin][action.color].setState(action.onoff)
+    // })
+    
+    colors.forEach(color => {
+        for (let i = 0; i <= 1; i++) {
+            cabinLight(i, color)
         }
     })
-    whiteLed.click(() => {
-        socket.emit('light', {
-            cabin: 1,
-            color: 'white',
-            onoff: whiteLed.currentState === 'on' ? 'off' : 'on'
-        })
-    })
-
+    
 })

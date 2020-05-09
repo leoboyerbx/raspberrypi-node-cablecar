@@ -21,7 +21,6 @@ console.log("My cabin number is " + cabinNumber);
 
 var socket = _socket["default"].connect('https://kble-car.cf/cabin1');
 
-console.log(socket);
 socket.on('on', function (color) {
   leds[color].on();
 });

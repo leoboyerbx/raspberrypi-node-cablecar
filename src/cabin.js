@@ -16,7 +16,6 @@ const cabinNumber = process.argv[2] || 1
 console.log("My cabin number is " + cabinNumber)
 
 const socket = io.connect('https://kble-car.cf/cabin1')
-console.log(socket)
 socket.on('on', color => {
   leds[color].on()
 })
