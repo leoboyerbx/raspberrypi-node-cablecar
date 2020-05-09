@@ -1,6 +1,6 @@
-import io from './client/socket.io'
 import config from './config'
 import Led from './modules/Led'
+import io from 'socket.io-client';
  
 const cabinConf = config.cabin
 
@@ -13,9 +13,9 @@ const leds = {
 }
 
 const cabinNumber = process.argv[2] || 1
-console.log("My cabin number is " + cabinNumber + ', url: http://kble-car.cf/cabin' + cabinNumber)
+console.log("My cabin number is " + cabinNumber)
 
-const socket = io('https://kble-car.cf/client')
+const socket = io.connect('https://kble-car.cf/cabin1')
 console.log(socket)
 socket.on('on', color => {
   leds[color].on()
