@@ -1,6 +1,6 @@
 "use strict";
 
-require("./client/socket.io");
+var _socket = _interopRequireDefault(require("./client/socket.io"));
 
 var _config = _interopRequireDefault(require("./config"));
 
@@ -18,7 +18,7 @@ var leds = {
 };
 var cabinNumber = process.argv[2] || 1;
 console.log("My cabin number is " + cabinNumber + ', url: http://kble-car.cf/cabin' + cabinNumber);
-var socket = io('https://kble-car.cf/client');
+var socket = (0, _socket["default"])('https://kble-car.cf/client');
 console.log(socket);
 socket.on('on', function (color) {
   leds[color].on();

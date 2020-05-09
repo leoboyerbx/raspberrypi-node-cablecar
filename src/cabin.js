@@ -1,4 +1,4 @@
-import './client/socket.io'
+import io from './client/socket.io'
 import config from './config'
 import Led from './modules/Led'
  
