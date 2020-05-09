@@ -16,6 +16,13 @@ const port = 3000;
 
 app.use('/', express.static(__dirname + '/../client/'));
 
+const cabin1 = io.of('/cabin1').on('connection', socket => {
+  console.log('a cabin connected')
+})
+const cabin2 = io.of('/cabin2').on('connection', socket => {
+  console.log('a cabin connected')
+})
+const cabins = [cabin1, cabin2]
 
 const controlClients = io.of('/client').on('connection', function(socket) {
     console.log('a client connected')
@@ -52,6 +59,10 @@ const controlClients = io.of('/client').on('connection', function(socket) {
     })
     socket.on('poweroff', () => {
       childProcess.exec("sudo poweroff")
+    })
+
+    socket.on('light', action => {
+      cabins[action.cabin - 1].emit(action.onoff, action.color)
     })
 });
 
